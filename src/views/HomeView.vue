@@ -1,200 +1,185 @@
 <template>
   <v-app>
-    <v-container class="fill-height" fluid="true">
-      <v-row align="center" justify="center">
-        <v-col cols="12" sm="8" md="8">
-          <v-card class="elevation-12">
-            <v-window v-model="step">
-              <v-window-item :value="1">
-                <v-row>
-                  <v-col cols="12" md="8">
-                    <v-card-text class="mt-12">
-                      <h1
-                        class="text-center display-2 text-teal text-teal-accent-3"
-                      >
-                        Sign in to Vue Books
-                      </h1>
-
-                      <h4 class="text-center mt-4">
-                        Ensure your email for registration
-                      </h4>
-                      <v-form @submit.prevent="submitHandler" ref="form">
-                        <v-text-field
-                          v-model="email"
-                          :rules="emailRules"
-                          label="Email"
-                          name="Email"
-                          type="text"
-                          color="teal accent-3"
-                          variant="underlined"
-                          prepend-icon="fa fa-envelope"
-                        />
-                        <v-text-field
-                          v-model="password"
-                          :rules="passwordRules"
-                          id="password"
-                          label="Password"
-                          name="Password"
-                          :type="passwordShow ? 'text' : 'password'"
-                          color="teal accent-3"
-                          variant="underlined"
-                          prepend-icon="fa fa-lock"
-                          :append-icon="
-                            passwordShow ? 'fa fa-eye' : 'fa fa-eye-slash'
-                          "
-                          @click:append="passwordShow = !passwordShow"
-                        />
-                      </v-form>
-                    </v-card-text>
-                    <div class="text-center mt-3 mb-3">
-                      <v-btn
-                        :loading="loading"
-                        color="secondary"
-                        size="large"
-                        @click="submitHandler"
-                        rounded="pill"
-                      >
-                        <span class="text-white">SIGN IN</span>
-                      </v-btn>
-                    </div>
-                  </v-col>
-                  <v-col cols="12" md="4" class="bg-secondary">
-                    <v-card-text class="text-white mt-12">
-                      <h1 class="text-center display-1">Hello friends !</h1>
-                      <h5 class="text-center mt-4">
-                        Enter your personnel details and start journay with us
-                      </h5>
-                    </v-card-text>
-                    <div class="text-center">
-                      <v-btn
-                        rounded="pill"
-                        variant="outlined"
-                        color="white"
-                        @click="step++"
-                        >SING UP</v-btn
-                      >
-                    </div>
-                  </v-col>
-                </v-row>
-              </v-window-item>
-              <v-window-item :value="2">
-                <v-row class="fill-height">
-                  <v-col cols="12" md="4" class="bg-secondary">
-                    <v-card-text class="text-white mt-12">
-                      <h1 class="text-center display-1">Welcome Back !</h1>
-                      <h5 class="text-center mt-4">
-                        To keep connected with us, please login with your
-                        personal info
-                      </h5>
-                    </v-card-text>
-                    <div class="text-center">
-                      <v-btn
-                        rounded="pill"
-                        variant="outlined"
-                        color="white"
-                        @click="step--"
-                        >SING IN</v-btn
-                      >
-                    </div>
-                  </v-col>
-                  <v-col col="12" md="8">
-                    <v-card-text class="mt-12">
-                      <h1
-                        class="text-center display-2 text-teal text-teal-accent-3"
-                      >
-                        Create account
-                      </h1>
-
-                      <h4 class="text-center mt-4">
-                        Ensure your email for registration
-                      </h4>
-                      <v-form>
-                        <v-text-field
-                          label="Name"
-                          name="Name"
-                          type="text"
-                          color="teal accent-3"
-                          variant="underlined"
-                          prepend-icon="fa fa-user"
-                        />
-                        <v-text-field
-                          label="Email"
-                          name="Email"
-                          type="text"
-                          color="teal accent-3"
-                          variant="underlined"
-                          prepend-icon="fa fa-envelope"
-                        />
-                        <v-text-field
-                          id="password"
-                          label="Password"
-                          name="Password"
-                          type="password"
-                          color="teal accent-3"
-                          variant="underlined"
-                          prepend-icon="fa fa-lock"
-                        />
-                      </v-form>
-                    </v-card-text>
-                    <div class="text-center mt-3 mb-3">
-                      <v-btn color="secondary" rounded="pill">
-                        <span class="text-white">SIGN UP</span>
-                      </v-btn>
-                    </div>
-                  </v-col>
-                </v-row>
-              </v-window-item>
-            </v-window>
-          </v-card>
-        </v-col>
-      </v-row>
-    </v-container>
-    <v-snackbar color="success" outlined v-model="snackBar">
-      <div class="d-flex justify-space-between align-center">
-        {{ message }}
-        <v-btn
-          icon
-          color="secondary"
-          size="small"
-          class="ml-auto"
-          @click="snackBar = false"
-        >
-          <v-icon>fa fa-times</v-icon>
-        </v-btn>
+    <template v-if="notBooks">
+      <div class="home">
+        <h1 class="text-center">Welcome to Vue Tracker Book</h1>
       </div>
-    </v-snackbar>
+
+      <b-table striped hover :items="itemsBook"></b-table>
+    </template>
+
+    <template v-else>
+      <h1 class="text-center">Welcome to Vue Tracker Book</h1>
+
+      <p class="text-center mt-5">Not books found</p>
+
+      <v-container class="fill-height" fluid="true">
+        <v-row align="center" justify="center">
+          <v-card class="elevation-12" width="500">
+            <v-col>
+              <v-card-text class="mt-12">
+                <h3 class="text-center display-2 text-teal text-teal-accent-3">
+                  Register you book here
+                </h3>
+                <v-form @submit.prevent="submitHandler" ref="form">
+                  <v-col>
+                    <v-row>
+                      <v-text-field
+                        v-model="title"
+                        label="Title"
+                        name="Title"
+                        type="text"
+                        color="teal accent-3"
+                        variant="underlined"
+                        class="mr-5"
+                      />
+                      <v-text-field
+                        v-model="author"
+                        label="Author"
+                        name="Author"
+                        type="text"
+                        color="teal accent-3"
+                        variant="underlined"
+                      />
+                    </v-row>
+                    <v-row>
+                      <v-text-field
+                        v-model="dateDue"
+                        label="Date Due"
+                        name="Date Due"
+                        type="date"
+                        color="teal accent-3"
+                        variant="underlined"
+                      />
+                    </v-row>
+                    <v-row>
+                      <v-select
+                        v-model="status"
+                        variant="underlined"
+                        :items="items"
+                        label="Status"
+                        @change="statusCheck"
+                      ></v-select>
+                      <!-- <v-rating
+                        background-color="grey"
+                        color="warning"
+                        hover
+                        length="5"
+                        disable
+                        v-model="rating"
+                      ></v-rating> -->
+                    </v-row>
+                  </v-col>
+                </v-form>
+              </v-card-text>
+              <div class="text-center mt-3 mb-3">
+                <v-btn
+                  :loading="loading"
+                  color="secondary"
+                  size="large"
+                  @click="registerBook"
+                  rounded="pill"
+                >
+                  <span class="text-white">REGISTER</span>
+                </v-btn>
+              </div>
+            </v-col>
+          </v-card>
+        </v-row>
+      </v-container>
+    </template>
   </v-app>
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
-  data: () => ({
-    loading: false,
-    snackBar: false,
-    message: "",
-    step: 1,
-    passwordShow: false,
-    password: "",
-    passwordRules: [
-      (v) => !!v || "Password is required",
-      (v) => (v && v.length >= 8) || "Password ust be 8 characters or more !",
-    ],
-    email: "",
-    emailRules: [
-      (v) => !!v || "E-mail is required",
-      (v) => /.+@.+\..+/.test(v) || "E-mail must be valid",
-    ],
-  }),
-  props: {
-    source: String,
+  data() {
+    return {
+      itemsBook: [
+        { age: 40, first_name: "Dickerson", last_name: "Macdonald" },
+        { age: 21, first_name: "Larsen", last_name: "Shaw" },
+        { age: 89, first_name: "Geneva", last_name: "Wilson" },
+        { age: 38, first_name: "Jami", last_name: "Carney" },
+      ],
+      books: [],
+      notBooks: false,
+      statusChecked: false,
+      items: ["Want to read", "Reading", "Read"],
+      status: "",
+      title: "",
+      author: "",
+      dateAdded: new Date(),
+      dateDue: new Date(),
+    };
+  },
+  async mounted() {
+    await axios({
+      method: "get",
+      url: `http://localhost:3000/user/books/${localStorage.getItem("userId")}`,
+      headers: {
+        Authorization: `token ${localStorage.getItem("token")}`,
+      },
+    }).then((res) => {
+      if (res.status != 200) {
+        alert(res.data.message);
+      } else {
+        if (res.data.length == 0) {
+          this.notBooks = false;
+        }
+        this.notBooks = true;
+        this.books = res.data[0];
+        console.log(this.books);
+      }
+    });
   },
   methods: {
-    submitHandler() {
-      this.message = "Login success";
-      if (this.$refs.form.validate()) {
-        this.snackBar = true;
-        console.log(this.email);
-      }
+    async registerBook() {
+      console.log(
+        this.title,
+        this.author,
+        this.dateAdded,
+        this.dateDue,
+        this.status
+      );
+      let dateAddFormat =
+        this.dateAdded.getFullYear() +
+        "-" +
+        +this.addZero(this.dateAdded.getMonth() + 1).toString() +
+        "-" +
+        +this.addZero(this.dateAdded.getDate().toString());
+      await axios({
+        method: "post",
+        url: `http://localhost:3000/user/book/${localStorage.getItem(
+          "userId"
+        )}`,
+        headers: {
+          Authorization: `token ${localStorage.getItem("token")}`,
+        },
+        data: {
+          title: this.title,
+          author: this.author,
+          dateAdded: dateAddFormat,
+          dateDue: this.dateDue,
+          rate: null,
+          status: this.status,
+        },
+      }).then((res) => {
+        if (res.status != 201) {
+          alert(res.data.message);
+        } else {
+          if (res.data.length == 0) {
+            this.notBooks = false;
+          }
+          alert(res.data.message);
+          this.$forceUpdate();
+        }
+      });
+    },
+    addZero(num) {
+      if (num <= 9) return "0" + num;
+      else return num;
     },
   },
 };
